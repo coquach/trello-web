@@ -1,8 +1,8 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import react from 'eslint-plugin-react'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import js from "@eslint/js";
+import globals from "globals";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 
 export default [
   { ignores: ["dist"] },
@@ -28,6 +28,7 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
+      //React
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": [
         "warn",
@@ -37,10 +38,14 @@ export default [
       "react-hooks/exhaustive-deps": "warn",
       "react/prop-types": 0,
       "react/display-name": 0,
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
-      "react/prop-types": 0,
-      "react/display-name": 0,
+      //MUI
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: ["@mui/*/*/*"],
+        },
+      ],
+      //Common
       curly: ["error", "all"], // Bắt buộc có dấu `{}` khi dùng if, else, for...
       "arrow-body-style": ["error", "as-needed"], // Không cần `{}` nếu function chỉ có return
       "prefer-const": "error", // Luôn dùng `const` nếu không reassigned
