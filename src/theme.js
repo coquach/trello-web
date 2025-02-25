@@ -14,14 +14,13 @@ const theme = createTheme({
         secondary: deepOrange,
       },
     },
-  },
   dark: {
     palette: {
       primary: cyan,
       secondary: orange,
     },
     cssVariables: true,
-  },
+  }},
 });
 
 export default theme;
