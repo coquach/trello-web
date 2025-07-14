@@ -32,7 +32,7 @@ function Profiles() {
           aria-expanded={open ? "true" : undefined}
         >
           <Avatar
-            sx={{ width: 30, height: 30, objectFit: "cover" }}
+            sx={{ width: 36, height: 36, objectFit: "cover" }}
             alt="Profile picture"
             src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
           />
