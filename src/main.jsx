@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "~/theme";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider defaultMode="system" theme={theme}>
       <CssBaseline />
       <App />
     </ThemeProvider>
