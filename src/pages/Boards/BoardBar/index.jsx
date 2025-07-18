@@ -6,9 +6,9 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Avatar from "@mui/material/Avatar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-
-import AvatarGroup from "@mui/material/AvatarGroup";
-function BoardBar() {
+import { capitalizeFirstLetter } from "~/utils/formatter";
+import AvatarGroup from "@mui/material/AvatarGroup"; 
+function BoardBar({ board }) {
   const MENUSTYLE = {
     backgroundColor: "transparent",
     border: "none",
@@ -39,14 +39,14 @@ function BoardBar() {
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         <Chip
-          label="Mern Stack Board"
+          label={board?.title || "Board Title"}
           icon={<DashboardIcon />}
           clickable
           sx={MENUSTYLE}
         />
 
         <Chip
-          label="Public/Private workspace"
+          label={capitalizeFirstLetter(board?.type)}
           icon={<VpnLockIcon />}
           clickable
           sx={MENUSTYLE}

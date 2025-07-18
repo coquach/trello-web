@@ -1,7 +1,4 @@
-import {
-  DeleteForever,
-  DragHandle
-} from "@mui/icons-material";
+import { DeleteForever, DragHandle } from "@mui/icons-material";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import Cloud from "@mui/icons-material/Cloud";
 import ContentCopy from "@mui/icons-material/ContentCopy";
@@ -16,9 +13,22 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import ListCards from "./ListCards/ListCards";
+import { mapOrder } from "~/utils/sort";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
+function Column({ column }) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: column._id,
+      data: { ...column },
+    });
 
-function Column() {
+  const dndKitColumnStyles = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -27,8 +37,14 @@ function Column() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const cardsOrdered = mapOrder(column?.cards, column?.cardOrderIds, "_id");
   return (
     <Box
+      ref={setNodeRef}
+      style={dndKitColumnStyles}
+      {...attributes}
+      {...listeners}
       sx={{
         minWidth: "300px",
         maxWidth: "300px",
@@ -59,7 +75,7 @@ function Column() {
           }}
           variant="h6"
         >
-          Title
+          {column?.title || "Column Title"}
         </Typography>
         <Box>
           <Tooltip title="More options">
@@ -135,7 +151,7 @@ function Column() {
       </Box>
 
       {/* Cards in the column */}
-      <ListCards />
+      <ListCards cards={cardsOrdered} />
       {/* Box column footer */}
       <Box
         sx={{

@@ -4,7 +4,11 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 
-function Card() {
+function Card({ card }) {
+  const shouldShowCardActions =
+    !!card?.memberIds?.length ||
+    !!card?.comments?.length ||
+    !!card?.attachments?.length;
   return (
     <MuiCard
       sx={{
@@ -13,27 +17,38 @@ function Card() {
         overflow: "unset",
       }}
     >
-      <CardMedia
-        sx={{ height: 140 }}
-        image="https://cdn.pixabay.com/photo/2024/10/02/18/24/leaf-9091894_1280.jpg"
-        title="green iguana"
-      />
+      {card?.cover && (
+        <CardMedia
+          sx={{ height: 140 }}
+          image={card.cover}
+          title="green iguana"
+        />
+      )}
+
       <CardContent
         sx={{ padding: 1.5, "&:last-child": { paddingBottom: 1.5 } }}
       >
-        <Typography>MernStack</Typography>
+        <Typography>{card?.title}</Typography>
       </CardContent>
-      <CardActions sx={{ padding: "0 4px 8px 4px" }}>
-        <Button size="small" startIcon={<Group />}>
-          20
-        </Button>
-        <Button size="small" startIcon={<Comment />}>
-          15
-        </Button>
-        <Button size="small" startIcon={<Attachment />}>
-          10
-        </Button>
-      </CardActions>
+      {shouldShowCardActions && (
+        <CardActions sx={{ padding: "0 4px 8px 4px" }}>
+          {!!card?.memberIds?.length && (
+            <Button size="small" startIcon={<Group />}>
+              {card.memberIds.length}
+            </Button>
+          )}
+          {!!card?.comments?.length && (
+            <Button size="small" startIcon={<Comment />}>
+              {card.comments.length}
+            </Button>
+          )}
+          {!!card?.attachments?.length && (
+            <Button size="small" startIcon={<Attachment />}>
+              {card.attachments.length}
+            </Button>
+          )}
+        </CardActions>
+      )}
     </MuiCard>
   );
 }
