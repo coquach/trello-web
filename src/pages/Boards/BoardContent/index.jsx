@@ -1,4 +1,5 @@
 import {
+  closestCorners,
   defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
@@ -6,16 +7,16 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-  closestCorners,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Box } from "@mui/material";
+import { cloneDeep, isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 import { mapOrder } from "~/utils/sort";
 import Column from "./ListColumns/Column/Column";
 import Card from "./ListColumns/Column/ListCards/Card/Card";
 import ListColumns from "./ListColumns/ListColumns";
-import { cloneDeep, set } from "lodash";
+import { generatePlaceholderCard } from "~/utils/formatter";
 
 function BoardContent({ board }) {
   const ACTIVE_DRAG_ITEM_TYPE = {
@@ -40,6 +41,72 @@ function BoardContent({ board }) {
   const findColumnByCardId = (cardId) =>
     oderedColumns.find((col) => col.cards.some((card) => card._id === cardId));
 
+  const moveCardBetweenDifferentColumns = (
+    active,
+    over,
+    overCardId,
+    activeDraggingCardId,
+    activeDraggingCardData,
+    activeColumn,
+    overColumn
+  ) => {
+    setOrderedColumns((prevColumns) => {
+      const overCardIndex = overColumn.cards.findIndex(
+        (card) => card._id === overCardId
+      );
+
+      const isBelowOverItem =
+        active.rect.current.translated &&
+        active.rect.current.translated.top > over.rect.top + over.rect.height;
+      const modifier = isBelowOverItem ? 1 : 0;
+      const newCardIndex =
+        overCardIndex >= 0 ? overCardIndex + modifier : overColumn.cards.length;
+
+      const nextColumns = cloneDeep(prevColumns);
+      const nextActiveColumn = nextColumns.find(
+        (column) => column._id === activeColumn._id
+      );
+      const nextOverColumn = nextColumns.find(
+        (column) => column._id === overColumn._id
+      );
+
+      if (nextActiveColumn) {
+        nextActiveColumn.cards = nextActiveColumn.cards.filter(
+          (card) => card._id !== activeDraggingCardId
+        );
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)];
+        }
+        nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
+          (card) => card._id
+        );
+      }
+      if (nextOverColumn) {
+        nextOverColumn.cards = nextOverColumn.cards.filter(
+          (card) => card._id !== activeDraggingCardId
+        );
+        const rebuild_activeDraggingCardData = {
+          ...activeDraggingCardData,
+          columnId: nextOverColumn._id,
+        };
+
+        nextOverColumn.cards = nextOverColumn.cards.toSpliced(
+          newCardIndex,
+          0,
+          rebuild_activeDraggingCardData
+        );
+        nextOverColumn.cards = nextOverColumn.cards.filter(
+          (card) => !card.FE_PlaceholderCard
+        );
+        nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
+          (card) => card._id
+        );
+      }
+      console.log("nextColumns", nextColumns);
+      return nextColumns;
+    });
+  };
+
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 10,
@@ -55,8 +122,10 @@ function BoardContent({ board }) {
 
   const [oderedColumns, setOrderedColumns] = useState([]);
 
+  // const lastOverId = useRef(null);
+
   useEffect(() => {
-    setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, "_id"));
+    setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, "_id"));
   }, [board]);
 
   const handleDragStart = (event) => {
@@ -85,7 +154,7 @@ function BoardContent({ board }) {
 
     const {
       id: activeDraggingCardId,
-      data: { current: activeDraggingCarData },
+      data: { current: activeDraggingCardData },
     } = active;
     const { id: overCardId } = over;
 
@@ -95,51 +164,15 @@ function BoardContent({ board }) {
       return;
     }
     if (activeColumn._id !== overColumn._id) {
-      setOrderedColumns((prevColumns) => {
-        const overCardIndex = overColumn.cards.findIndex(
-          (card) => card._id === overCardId
-        );
-
-        const isBelowOverItem =
-          active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
-        const modifier = isBelowOverItem ? 1 : 0;
-        const newCardIndex =
-          overCardIndex >= 0
-            ? overCardIndex + modifier
-            : overColumn.cards.length + 1;
-
-        const nextColumns = cloneDeep(prevColumns);
-        const nextActiveColumn = nextColumns.find(
-          (column) => column._id === activeColumn._id
-        );
-        const nextOverColumn = nextColumns.find(
-          (column) => column._id === overColumn._id
-        );
-
-        if (nextActiveColumn) {
-          nextActiveColumn.cards = nextActiveColumn.cards.filter(
-            (card) => card._id !== activeDraggingCarData._id
-          );
-          nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(
-            (card) => card._id
-          );
-        }
-        if (nextOverColumn) {
-          nextOverColumn.cards = nextOverColumn.cards.filter(
-            (card) => card._id !== activeDraggingCarData._id
-          );
-          nextOverColumn.cards = nextOverColumn.cards.toSpliced(
-            newCardIndex,
-            0,
-            activeDraggingCarData
-          );
-          nextOverColumn.cardOrderIds = nextOverColumn.cards.map(
-            (card) => card._id
-          );
-        }
-        return nextColumns;
-      });
+      moveCardBetweenDifferentColumns(
+        active,
+        over,
+        overCardId,
+        activeDraggingCardId,
+        activeDraggingCardData,
+        activeColumn,
+        overColumn
+      );
     }
   };
 
@@ -152,7 +185,7 @@ function BoardContent({ board }) {
     if (activeDragItem.type === ACTIVE_DRAG_ITEM_TYPE.CARD) {
       const {
         id: activeDraggingCardId,
-        data: { current: activeDraggingCarData },
+        data: { current: activeDraggingCardData },
       } = active;
       const { id: overCardId } = over;
 
@@ -162,6 +195,15 @@ function BoardContent({ board }) {
         return;
       }
       if (oldColumnWhenDragStartCard._id !== overColumn._id) {
+        moveCardBetweenDifferentColumns(
+          active,
+          over,
+          overCardId,
+          activeDraggingCardId,
+          activeDraggingCardData,
+          activeColumn,
+          overColumn
+        );
       } else {
         const oldCardIndex = oldColumnWhenDragStartCard?.cards?.findIndex(
           (card) => card._id === activeDragItem.id
@@ -182,10 +224,12 @@ function BoardContent({ board }) {
           );
           if (nextActiveColumn) {
             nextActiveColumn.cards = orderedColumn;
-            nextActiveColumn.cardOrderIds = orderedColumn.map((card) => card._id);
+            nextActiveColumn.cardOrderIds = orderedColumn.map(
+              (card) => card._id
+            );
           }
           return nextColumns;
-        })
+        });
       }
     }
 
@@ -227,6 +271,46 @@ function BoardContent({ board }) {
       },
     }),
   };
+
+  // const collisionDetection = useCallback(
+  //   (args) => {
+  //     if (activeDragItem.type === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+  //       return closestCorners({ ...args });
+  //     }
+
+  //     const pointerIntersection = pointerWithin(args);
+
+  //     const intersections =
+  //       pointerIntersection.length > 0
+  //         ? pointerIntersection
+  //         : rectIntersection(args);
+
+  //     let overId = getFirstCollision(intersections, "id");
+
+  //     if (overId) {
+  //       const checkColumn = oderedColumns.find(
+  //         (column) => column._id === overId
+  //       );
+  //       if (checkColumn) {
+  //         overId = closestCorners({
+  //           ...args,
+  //           droppableContainers: args.droppableContainers.filter(
+  //             (container) =>
+  //               container.id !== overId &&
+  //               checkColumn?.cardOrderIds?.includes(container.id)
+  //           ),
+  //         })[0]?.id;
+  //       }
+
+  //       lastOverId.current = overId;
+  //       return [{ id: overId }];
+  //     }
+
+  //     return lastOverId.current ? [{ id: lastOverId.current }] : [];
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [activeDragItem.type]
+  // );
 
   return (
     <DndContext
