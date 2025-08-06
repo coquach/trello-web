@@ -24,8 +24,8 @@ function AppBar() {
   const [searchValue, setSearchValue] = useState("");
   const clearSearch = () => {
     setSearchValue("");
-  }
-  
+  };
+
   return (
     <Box
       px={2}
@@ -107,6 +107,9 @@ function AppBar() {
           }}
           sx={{
             "& label": {
+              color: "white",
+            },
+            "& label.Mui-focused": {
               color: "white",
             },
             "& .MuiOutlinedInput-root": {
