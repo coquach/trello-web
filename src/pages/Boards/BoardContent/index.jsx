@@ -124,9 +124,9 @@ function BoardContent({ board }) {
 
   // const lastOverId = useRef(null);
 
-  useEffect(() => {
-    setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, "_id"));
-  }, [board]);
+  // useEffect(() => {
+  //   setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, "_id"));
+  // }, [board]);
 
   const handleDragStart = (event) => {
     const dragData = event?.active?.data?.current || {};

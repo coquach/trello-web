@@ -7,7 +7,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import Avatar from "@mui/material/Avatar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { capitalizeFirstLetter } from "~/utils/formatter";
-import AvatarGroup from "@mui/material/AvatarGroup"; 
+import AvatarGroup from "@mui/material/AvatarGroup";
 function BoardBar({ board }) {
   const MENUSTYLE = {
     backgroundColor: "transparent",
