@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { DeleteForever, DragHandle, CloseOutlined } from "@mui/icons-material";
+import { CloseOutlined, DeleteForever, DragHandle } from "@mui/icons-material";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import Cloud from "@mui/icons-material/Cloud";
 import ContentCopy from "@mui/icons-material/ContentCopy";
@@ -16,7 +16,6 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { mapOrder } from "~/utils/sort";
 import ListCards from "./ListCards/ListCards";
-import theme from "~/theme";
 
 function Column({ column }) {
   const {
@@ -216,6 +215,7 @@ function Column({ column }) {
                 size="small"
                 variant="outlined"
                 autoFocus
+                data-no-dnd="true"
                 value={newCardTitle}
                 onChange={(e) => setNewCardTitle(e.target.value)}
                 sx={{

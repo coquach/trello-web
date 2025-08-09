@@ -3,12 +3,11 @@ import {
   defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
-  MouseSensor,
   PointerSensor,
-  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { MouseSensor, TouchSensor } from "~/customLibraries/DndKitSensor";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Box } from "@mui/material";
 import { cloneDeep, isEmpty } from "lodash";
@@ -101,11 +100,6 @@ function BoardContent({ board }) {
       return nextColumns;
     });
   };
-  const pointerSensor = useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 10,
-    },
-  });
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -118,7 +112,7 @@ function BoardContent({ board }) {
       tolerance: 50,
     },
   });
-  const sensors = useSensors(pointerSensor, mouseSensor, touchSensor);
+  const sensors = useSensors( mouseSensor, touchSensor);
 
   const [oderedColumns, setOrderedColumns] = useState([]);
 
