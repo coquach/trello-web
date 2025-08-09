@@ -6,6 +6,7 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 function ListColumns({ columns }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
@@ -15,7 +16,8 @@ function ListColumns({ columns }) {
   const [newColumnTitle, setNewColumnTitle] = useState("");
 
   const addNewColumn = () => {
-    if (newColumnTitle.trim() === "") {
+    if (!newColumnTitle) {
+      toast.error("Column title cannot be empty");
       return;
     }
     // Logic to add new column

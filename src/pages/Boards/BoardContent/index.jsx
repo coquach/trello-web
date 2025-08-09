@@ -3,20 +3,19 @@ import {
   defaultDropAnimationSideEffects,
   DndContext,
   DragOverlay,
-  PointerSensor,
   useSensor,
-  useSensors,
+  useSensors
 } from "@dnd-kit/core";
-import { MouseSensor, TouchSensor } from "~/customLibraries/DndKitSensor";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Box } from "@mui/material";
 import { cloneDeep, isEmpty } from "lodash";
 import { useEffect, useState } from "react";
+import { MouseSensor, TouchSensor } from "~/customLibraries/DndKitSensor";
+import { generatePlaceholderCard } from "~/utils/formatter";
 import { mapOrder } from "~/utils/sort";
 import Column from "./ListColumns/Column/Column";
 import Card from "./ListColumns/Column/ListCards/Card/Card";
 import ListColumns from "./ListColumns/ListColumns";
-import { generatePlaceholderCard } from "~/utils/formatter";
 
 function BoardContent({ board }) {
   const ACTIVE_DRAG_ITEM_TYPE = {
