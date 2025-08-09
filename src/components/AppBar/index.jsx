@@ -22,9 +22,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import CloseIcon from "@mui/icons-material/Close";
 function AppBar() {
   const [searchValue, setSearchValue] = useState("");
-  const clearSearch = () => {
-    setSearchValue("");
-  };
 
   return (
     <Box

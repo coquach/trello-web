@@ -38,12 +38,14 @@ function BoardBar({ board }) {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Chip
-          label={board?.title || "Board Title"}
-          icon={<DashboardIcon />}
-          clickable
-          sx={MENUSTYLE}
-        />
+        <Tooltip title={board?.description || "Board Title"}>
+          <Chip
+            label={board?.title || "Board Title"}
+            icon={<DashboardIcon />}
+            clickable
+            sx={MENUSTYLE}
+          />
+        </Tooltip>
 
         <Chip
           label={capitalizeFirstLetter(board?.type)}
@@ -100,7 +102,7 @@ function BoardBar({ board }) {
               color: "white",
               "&:first-of-type": {
                 backgroundColor: "#a4b0de",
-              }
+              },
             },
           }}
         >

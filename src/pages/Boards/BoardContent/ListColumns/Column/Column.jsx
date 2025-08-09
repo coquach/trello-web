@@ -1,28 +1,35 @@
-import { DeleteForever, DragHandle } from "@mui/icons-material";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { DeleteForever, DragHandle, CloseOutlined } from "@mui/icons-material";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import Cloud from "@mui/icons-material/Cloud";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import ContentCut from "@mui/icons-material/ContentCut";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, Tooltip, Typography } from "@mui/material";
+import { Box, Button, TextField, Tooltip, Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
-import ListCards from "./ListCards/ListCards";
 import { mapOrder } from "~/utils/sort";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import ListCards from "./ListCards/ListCards";
+import theme from "~/theme";
 
 function Column({ column }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({
-      id: column._id,
-      data: { ...column },
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: column._id,
+    data: { ...column },
+  });
 
   const dndKitColumnStyles = {
     transform: CSS.Translate.toString(transform),
@@ -41,6 +48,22 @@ function Column({ column }) {
   };
 
   const cardsOrdered = mapOrder(column?.cards, column?.cardOrderIds, "_id");
+
+  const [openNewCardForm, setOpenNewCardForm] = useState(false);
+  const toggleOpenNewCardForm = () => {
+    setOpenNewCardForm((prev) => !prev);
+  };
+  const [newCardTitle, setNewCardTitle] = useState("");
+
+  const addNewCard = () => {
+    if (newCardTitle.trim() === "") {
+      return;
+    }
+    // Logic to add new card
+    console.log("New card added:", newCardTitle);
+    setNewCardTitle("");
+    toggleOpenNewCardForm();
+  };
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <Box
@@ -156,16 +179,107 @@ function Column({ column }) {
         <Box
           sx={{
             height: (theme) => theme.trello.footerHeight,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             padding: 2,
           }}
         >
-          <Button startIcon={<AddCardIcon />}>Add new card</Button>
-          <Tooltip title="Drag to move">
-            <DragHandle sx={{ cursor: "pointer" }} />
-          </Tooltip>
+          {!openNewCardForm ? (
+            <Box
+              sx={{
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                onClick={toggleOpenNewCardForm}
+                startIcon={<AddCardIcon />}
+              >
+                Add new card
+              </Button>
+              <Tooltip title="Drag to move">
+                <DragHandle sx={{ cursor: "pointer" }} />
+              </Tooltip>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              <TextField
+                label="Enter card title..."
+                type="text"
+                size="small"
+                variant="outlined"
+                autoFocus
+                value={newCardTitle}
+                onChange={(e) => setNewCardTitle(e.target.value)}
+                sx={{
+                  "& label": {
+                    color: "text.primary",
+                  },
+                  "& label.Mui-focused": {
+                    color: (theme) => theme.palette.primary,
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: (theme) => theme.palette.primary,
+                    },
+                    "&:hover fieldset": {
+                      borderColor: (theme) => theme.palette.primary,
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: (theme) => theme.palette.primary,
+                    },
+                  },
+                  "& input": {
+                    color: (theme) => theme.palette.primary.main,
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? "#333643" : "white",
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    borderRadius: 1,
+                  },
+                }}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={addNewCard}
+                  size="small"
+                  sx={{
+                    boxShadow: "none",
+                    border: "0.5px solid",
+                    borderColor: (theme) => theme.palette.success.main,
+                    "&:hover": {
+                      bgcolor: (theme) => theme.palette.success.main,
+                    },
+                  }}
+                >
+                  Add
+                </Button>
+                <CloseOutlined
+                  fontSize="small"
+                  sx={{
+                    color: (theme) => theme.palette.warning.light,
+                    cursor: "pointer",
+                  }}
+                  onClick={toggleOpenNewCardForm}
+                />
+              </Box>
+            </Box>
+          )}
         </Box>
       </Box>
     </div>

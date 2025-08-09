@@ -4,6 +4,7 @@ import {
   DndContext,
   DragOverlay,
   MouseSensor,
+  PointerSensor,
   TouchSensor,
   useSensor,
   useSensors,
@@ -31,12 +32,6 @@ function BoardContent({ board }) {
   });
   const [oldColumnWhenDragStartCard, setOldColumnWhenDragStartCard] =
     useState(null);
-
-  // const pointerSensor = useSensor(PointerSensor, {
-  //   activationConstraint: {
-  //     distance: 10,
-  //   },
-  // });
 
   const findColumnByCardId = (cardId) =>
     oderedColumns.find((col) => col.cards.some((card) => card._id === cardId));
@@ -106,6 +101,11 @@ function BoardContent({ board }) {
       return nextColumns;
     });
   };
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 10,
+    },
+  });
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -118,15 +118,19 @@ function BoardContent({ board }) {
       tolerance: 50,
     },
   });
-  const sensors = useSensors(mouseSensor, touchSensor);
+  const sensors = useSensors(pointerSensor, mouseSensor, touchSensor);
 
   const [oderedColumns, setOrderedColumns] = useState([]);
 
   // const lastOverId = useRef(null);
 
-  // useEffect(() => {
-  //   setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, "_id"));
-  // }, [board]);
+
+  // Initialize ordered columns when board data is available
+  useEffect(() => {
+    if (board?.columns && board?.columnOrderIds) {
+      setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, "_id"));
+    }
+  }, [board]);
 
   const handleDragStart = (event) => {
     const dragData = event?.active?.data?.current || {};
