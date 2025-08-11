@@ -122,7 +122,7 @@ function AppBar() {
             },
             "& input": {
               color: "white",
-            },
+            }
           }}
         />
 

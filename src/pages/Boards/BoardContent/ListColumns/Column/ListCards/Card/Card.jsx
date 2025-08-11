@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import theme from "~/theme";
 
 function Card({ card }) {
   const shouldShowCardActions =
@@ -35,6 +36,10 @@ function Card({ card }) {
         boxShadow: "0 1px 1px rgba(0, 0, 0, 0.2)",
         overflow: card?.FE_PlaceholderCard ? "hidden" : "unset",
         height: card?.FE_PlaceholderCard ? "0px" : "unset",
+        border: card?.FE_PlaceholderCard ? "none" :"1px solid transparent",
+        "&:hover": {
+          borderColor: (theme) => theme.palette.primary.main, // màu xanh MUI
+        },
       }}
     >
       {card?.cover && (

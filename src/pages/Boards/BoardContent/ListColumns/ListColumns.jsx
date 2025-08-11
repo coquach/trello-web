@@ -8,21 +8,32 @@ import {
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-function ListColumns({ columns }) {
+function ListColumns({
+  columns,
+  createNewColumn,
+  createNewCard,
+  deleteColumnDetails,
+}) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false);
   const toggleOpenNewColumnForm = () => {
     setOpenNewColumnForm((prev) => !prev);
   };
-  const [newColumnTitle, setNewColumnTitle] = useState("");
+  const [newColumnTitle, setNewColumnTitle] = useState('');
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
-      toast.error("Column title cannot be empty");
+      toast.error('Column title cannot be empty');
       return;
     }
+
+    const newColumnData = {
+      title: newColumnTitle,
+    };
+
+    await createNewColumn(newColumnData);
     // Logic to add new column
-    console.log("New column added:", newColumnTitle);
-    setNewColumnTitle("");
+    console.log('New column added:', newColumnTitle);
+    setNewColumnTitle('');
     toggleOpenNewColumnForm();
   };
   return (
@@ -32,38 +43,43 @@ function ListColumns({ columns }) {
     >
       <Box
         sx={{
-          backgroundColor: "inherit",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          overflowY: "hidden",
-          overflowX: "auto",
-          "&::-webkit-scrollbar-track": {
+          backgroundColor: 'inherit',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          overflowY: 'hidden',
+          overflowX: 'auto',
+          '&::-webkit-scrollbar-track': {
             margin: 2,
           },
         }}
       >
         {columns?.map((column) => (
-          <Column key={column._id} column={column} />
+          <Column
+            key={column._id}
+            column={column}
+            createNewCard={createNewCard}
+            deleteColumnDetails={deleteColumnDetails}
+          />
         ))}
         {!openNewColumnForm ? (
           <Box
             onClick={toggleOpenNewColumnForm}
             sx={{
-              minWidth: "250px",
-              maxWidth: "250px",
-              borderRadius: "6px",
+              minWidth: '250px',
+              maxWidth: '250px',
+              borderRadius: '6px',
               marginX: 2,
-              height: "fit-content",
-              backgroundColor: "#ffffff3d",
+              height: 'fit-content',
+              backgroundColor: '#ffffff3d',
             }}
           >
             <Button
               startIcon={<NoteAdd />}
               sx={{
-                color: "white",
-                width: "100%",
-                justifyContent: "flex-start",
+                color: 'white',
+                width: '100%',
+                justifyContent: 'flex-start',
                 paddingLeft: 2.5,
                 paddingY: 1,
               }}
@@ -74,66 +90,66 @@ function ListColumns({ columns }) {
         ) : (
           <Box
             sx={{
-              minWidth: "250px",
-              maxWidth: "250px",
+              minWidth: '250px',
+              maxWidth: '250px',
               mx: 2,
               p: 2,
-              borderRadius: "6px",
-              height: "fit-content",
-              bgcolor: "#ffffff3d",
-              display: "flex",
-              flexDirection: "column",
+              borderRadius: '6px',
+              height: 'fit-content',
+              bgcolor: '#ffffff3d',
+              display: 'flex',
+              flexDirection: 'column',
               gap: 1,
             }}
           >
             <TextField
-              label="Enter column title..."
-              type="text"
-              size="small"
-              variant="outlined"
+              label='Enter column title...'
+              type='text'
+              size='small'
+              variant='outlined'
               autoFocus
               value={newColumnTitle}
               onChange={(e) => setNewColumnTitle(e.target.value)}
               sx={{
-                "& label": {
-                  color: "white",
+                '& label': {
+                  color: 'white',
                 },
-                "& label.Mui-focused": {
-                  color: "white",
+                '& label.Mui-focused': {
+                  color: 'white',
                 },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "white",
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'white',
                   },
-                  "&:hover fieldset": {
-                    borderColor: "white",
+                  '&:hover fieldset': {
+                    borderColor: 'white',
                   },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "white",
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'white',
                   },
                 },
-                "& input": {
-                  color: "white",
+                '& input': {
+                  color: 'white',
                 },
               }}
             />
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "stretch",
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'stretch',
                 gap: 1,
               }}
             >
               <Button
                 onClick={addNewColumn}
-                variant="contained"
-                color="success"
+                variant='contained'
+                color='success'
                 sx={{
-                  boxShadow: "none",
-                  border: "0.5px solid",
+                  boxShadow: 'none',
+                  border: '0.5px solid',
                   borderColor: (theme) => theme.palette.success.main,
-                  "&:hover": {
+                  '&:hover': {
                     borderColor: (theme) => theme.palette.success.main,
                   },
                 }}
@@ -141,13 +157,13 @@ function ListColumns({ columns }) {
                 Add Column
               </Button>
               <Button
-                variant="outlined"
-                color="cancel"
+                variant='outlined'
+                color='cancel'
                 sx={{
-                  flex: "auto",
-                  bgcolor: "gray",
-                  color: "white",
-                  border: "none",
+                  flex: 'auto',
+                  bgcolor: 'gray',
+                  color: 'white',
+                  border: 'none',
                 }}
                 onClick={toggleOpenNewColumnForm}
               >
