@@ -4,7 +4,7 @@ let apiRoot = ''
 if (process.env.BUILD_MODE === 'dev') {
   apiRoot = 'http://localhost:3000'
 } else if (process.env.BUILD_MODE === 'production') {
-  apiRoot = 'https://trello-web-ten-nu.vercel.app'
+  apiRoot = 'https://trello-api-b3wg.onrender.com'
 }
 
 
