@@ -1,5 +1,8 @@
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   createNewCardAPI,
   createNewColumnAPI,
@@ -10,20 +13,15 @@ import {
   updateColumnDetailsAPI,
 } from '~/apis/index';
 import AppBar from '~/components/AppBar/index';
-import BoardBar from './BoardBar/index';
-import BoardContent from './BoardContent/index';
-import { isEmpty } from 'lodash';
 import { generatePlaceholderCard } from '~/utils/formatter';
 import { mapOrder } from '~/utils/sort';
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { ClassSharp } from '@mui/icons-material';
-import { ClassNames } from '@emotion/react';
-import { toast } from 'react-toastify';
+import BoardBar from './BoardBar/index';
+import BoardContent from './BoardContent/index';
 function Board() {
   const [board, setBoard] = useState(null);
 
   useEffect(() => {
-    const boardId = '689609f918e181bf194a4744';
+    const boardId = '6896O09f918e181bf194a4744';
 
     fetchBoardDetailsAPI(boardId).then((data) => {
       data.columns = mapOrder(data.columns, data.columnOrderIds, '_id');
