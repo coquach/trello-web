@@ -14,8 +14,7 @@ export const fetchBoardDetailsAPI = createAsyncThunk(
   'activeBoard/fetchBoardDetailsAPI',
   async (boardId) => {
     const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`);
-    console.log("Board details fetched:", response.board);
-    return response.board;
+    return response.data;
   }
 )
 
@@ -43,8 +42,9 @@ export const activeBoardSlice = createSlice({
 
   //* Nơi xử lí dữ liệu bất đồng bộ
   extraReducers: (builder) => {
-    builder.addCase(fetchBoardDetailsAPI.fulfilled), (state, action) => {
-      const board = action.payload
+    builder.addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
+      // eslint-disable-next-line prefer-const
+      let board = action.payload
 
       board.columns = mapOrder(board.columns, board.columnOrderIds, '_id');
 
@@ -59,8 +59,7 @@ export const activeBoardSlice = createSlice({
       });
 
       state.currentActiveBoard = board
-    }
-
+    })
   }
 })
 
