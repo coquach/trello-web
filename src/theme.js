@@ -87,7 +87,7 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: ({ theme }) => ({
-          color: theme.palette.primary.main,
+          color: theme.palette.primary,
           fontSize: "0.875rem",
         }),
       },

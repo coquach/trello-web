@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   moveCardToDifferentColumnAPI,
   updateBoardDetailsAPI,
-  updateColumnDetailsAPI
+  updateColumnDetailsAPI,
 } from '~/apis/index';
 import AppBar from '~/components/AppBar/index';
 import {
@@ -16,16 +16,17 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice';
 import BoardBar from './BoardBar/index';
 import BoardContent from './BoardContent/index';
+import { useParams } from 'react-router-dom';
 function Board() {
   const dispatch = useDispatch();
   const board = useSelector(selectCurrentActiveBoard);
+  const { boardId } = useParams();
 
   useEffect(() => {
-    const boardId = '689609f918e181bf194a4744';
+    // const boardId = '689609f918e181bf194a4744';
 
     dispatch(fetchBoardDetailsAPI(boardId));
-  }, [dispatch]);
-
+  }, [dispatch, boardId]);
 
   const moveColumns = (dndOrderColumns) => {
     const dndOrderColumnsIds = dndOrderColumns.map((c) => c._id);
@@ -90,7 +91,6 @@ function Board() {
         ?.cardOrderIds,
     });
   };
-
 
   if (!board) {
     return (
