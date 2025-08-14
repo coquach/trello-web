@@ -19,7 +19,10 @@ import { toast } from 'react-toastify';
 import ListCards from './ListCards/ListCards';
 import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice';
+import {
+  selectCurrentActiveBoard,
+  updateCurrentActiveBoard,
+} from '~/redux/activeBoard/activeBoardSlice';
 import { cloneDeep } from 'lodash';
 
 function Column({ column }) {
@@ -339,6 +342,7 @@ function Column({ column }) {
                 }}
               >
                 <Button
+                  className='interceptor-loading'
                   variant='contained'
                   color='success'
                   onClick={addNewCard}
