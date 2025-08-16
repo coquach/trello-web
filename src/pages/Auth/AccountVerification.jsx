@@ -5,7 +5,7 @@ import { verifyUserAPI } from '~/apis'
 
 function AccountVerification() {
   // Lấy các giá trị email và token từ URL
-  let [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   // const email = searchParams.get('email')
   // const token = searchParams.get('token')
   const { email, token } = Object.fromEntries([...searchParams])

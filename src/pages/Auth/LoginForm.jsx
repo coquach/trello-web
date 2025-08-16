@@ -1,5 +1,9 @@
-// TrungQuanDev: https://youtube.com/@trungquandev
-import { Link, useParams } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -20,6 +24,9 @@ import {
   PASSWORD_RULE_MESSAGE,
 } from '~/utils/validators';
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { loginUserAPI } from '~/redux/user/userSlice';
 
 function LoginForm() {
   const {
@@ -27,10 +34,25 @@ function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  let [searchParams] = useParams();
+  const [searchParams] = useSearchParams();
   const registeredEmail = searchParams.get('registeredEmail');
   const verifiedEmail = searchParams.get('verifiedEmail');
-  const submitLogIn = () => {};
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const submitLogIn = (data) => {
+    const { email, password } = data;
+
+    toast.promise( 
+      dispatch(loginUserAPI({email, password})),{
+        pending: 'Logging in...'
+      })
+      .then((res) => {
+        console.log("🚀 ~ submitLogIn ~ res:", res)
+        if (!res.error) {navigate('/')}
+      });
+  };
   return (
     <form onSubmit={handleSubmit(submitLogIn)}>
       <Zoom in={true} style={{ transitionDelay: '200ms' }}>
