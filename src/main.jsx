@@ -14,11 +14,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
 import { injectStore } from './utils/authorizeAxios';
+import { GlobalStyles } from '@mui/material';
 
 const persistor = persistStore(store);
 
-injectStore(store)
-
+injectStore(store);
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter
@@ -42,6 +42,7 @@ createRoot(document.getElementById('root')).render(
               buttonOrder: ['confirm', 'cancel'],
             }}
           >
+            <GlobalStyles styles={{ a: { textDecoration: 'none' } }} />
             <CssBaseline />
             <App />
             <ToastContainer position='bottom-left' theme='colored' />

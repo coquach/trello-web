@@ -1,7 +1,6 @@
 import {
   Link,
   useNavigate,
-  useParams,
   useSearchParams,
 } from 'react-router-dom';
 import Box from '@mui/material/Box';
@@ -46,7 +45,9 @@ function LoginForm() {
 
     toast.promise( 
       dispatch(loginUserAPI({email, password})),{
-        pending: 'Logging in...'
+        pending: 'Logging in...',
+        success: 'Login successful!',
+        error: 'Login failed!'
       })
       .then((res) => {
         console.log("🚀 ~ submitLogIn ~ res:", res)

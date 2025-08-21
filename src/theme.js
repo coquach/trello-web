@@ -61,10 +61,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
-          borderWidth: "0.5px",
-          "&:hover": {
-            borderWidth: "1px",
-          },
+          border: 'none',
+          boxShadow: 'none',
+          borderRadius: "8px",
+
         },
       },
     },
