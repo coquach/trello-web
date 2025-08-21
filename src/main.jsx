@@ -13,8 +13,12 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
+import { injectStore } from './utils/authorizeAxios';
 
- const persistor = persistStore(store);
+const persistor = persistStore(store);
+
+injectStore(store)
+
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter
@@ -32,9 +36,8 @@ createRoot(document.getElementById('root')).render(
               dialogProps: { maxWidth: 'xs' },
               confirmationButtonProps: { variant: 'contained' },
               cancellationButtonProps: { color: 'inherit' },
-
-              //* Only close in 2 buttons
-              allowClose: false,
+              cancellationText: 'Cancel',
+              allowClose: true,
 
               buttonOrder: ['confirm', 'cancel'],
             }}
