@@ -43,15 +43,17 @@ function LoginForm() {
   const submitLogIn = (data) => {
     const { email, password } = data;
 
-    toast.promise( 
+    toast.promise(
       dispatch(loginUserAPI({email, password})),{
         pending: 'Logging in...',
-        success: 'Login successful!',
         error: 'Login failed!'
       })
       .then((res) => {
         console.log("🚀 ~ submitLogIn ~ res:", res)
-        if (!res.error) {navigate('/')}
+        if (!res.error) {
+          toast.success('Login successful!');
+          navigate('/')
+        }
       });
   };
   return (

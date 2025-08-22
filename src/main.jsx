@@ -32,6 +32,7 @@ createRoot(document.getElementById('root')).render(
       <PersistGate persistor={persistor}>
         <ThemeProvider defaultMode='system' theme={theme}>
           <ConfirmProvider
+            useLegacyReturn
             defaultOptions={{
               dialogProps: { maxWidth: 'xs' },
               confirmationButtonProps: { variant: 'contained' },

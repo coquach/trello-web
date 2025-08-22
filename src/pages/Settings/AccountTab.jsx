@@ -76,6 +76,7 @@ function AccountTab() {
     }
 
     // Sử dụng FormData để xử lý dữ liệu liên quan tới file khi gọi API
+    // eslint-disable-next-line prefer-const
     let reqData = new FormData()
     reqData.append('avatar', e.target?.files[0])
     // Cách để log được dữ liệu thông qua FormData
@@ -84,7 +85,22 @@ function AccountTab() {
       console.log('reqData Value: ', value)
     }
 
+
     // Gọi API...
+    toast.promise(
+      dispatch(updatedUserAPI(reqData)),
+      {
+        pending: 'Uploading your avatar...',
+        error: 'Upload failed!'
+      }
+    ).then((res) => {
+      // Xử lý sau khi upload thành công, ví dụ: thông báo thành công
+      if (!res.error) {
+        toast.success('Your avatar has been updated successfully!')
+      }
+      // Reset lại input file để có thể upload lại cùng file nếu cần
+      e.target.value = ''
+    })
   }
 
   return (
