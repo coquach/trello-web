@@ -23,6 +23,8 @@ import SidebarCreateBoardModal from './create'
 
 import { styled } from '@mui/material/styles'
 import { Grid2 } from '@mui/material'
+import { fetchBoardsAPI } from '~/apis'
+import { DEFAULT_ITEMS_PER_PAGE, DEFAULT_PAGE } from '~/utils/constants'
 // Styles của mấy cái Sidebar item menu, anh gom lại ra đây cho gọn.
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -61,15 +63,19 @@ function Boards() {
   const page = parseInt(query.get('page') || '1', 10)
 
   useEffect(() => {
-    // Fake tạm 16 cái item thay cho boards
-    // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    setBoards([...Array(16)].map((_, i) => i))
-    // Fake tạm giả sử trong Database trả về có tổng 100 bản ghi boards
-    setTotalBoards(100)
+    // setBoards([...Array(16)].map((_, i) => i))
+    // // Fake tạm giả sử trong Database trả về có tổng 100 bản ghi boards
+    // setTotalBoards(100)
 
     // Gọi API lấy danh sách boards ở đây...
-    // ...
-  }, [])
+
+    console.log('Fetching boards with query:', location.search)
+    fetchBoardsAPI(location.search)
+      .then((res) => {
+        setBoards(res.boards || [])
+        setTotalBoards(res.totalBoards || 0)
+      })
+  }, [location.search])
 
   // Lúc chưa tồn tại boards > đang chờ gọi api thì hiện loading
   if (!boards) {
@@ -82,102 +88,124 @@ function Boards() {
       <Box sx={{ paddingX: 2, my: 4 }}>
         <Grid2 container spacing={2}>
           <Grid2 size={{ xs: 12, sm: 3 }}>
-            <Stack direction="column" spacing={1}>
-              <SidebarItem className="active">
-                <SpaceDashboardIcon fontSize="small" />
+            <Stack direction='column' spacing={1}>
+              <SidebarItem className='active'>
+                <SpaceDashboardIcon fontSize='small' />
                 Boards
               </SidebarItem>
               <SidebarItem>
-                <ListAltIcon fontSize="small" />
+                <ListAltIcon fontSize='small' />
                 Templates
               </SidebarItem>
               <SidebarItem>
-                <HomeIcon fontSize="small" />
+                <HomeIcon fontSize='small' />
                 Home
               </SidebarItem>
             </Stack>
             <Divider sx={{ my: 1 }} />
-            <Stack direction="column" spacing={1}>
+            <Stack direction='column' spacing={1}>
               <SidebarCreateBoardModal />
             </Stack>
           </Grid2>
 
           <Grid2 size={{ xs: 12, sm: 9 }}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 3 }}>Your boards:</Typography>
+            <Typography variant='h4' sx={{ fontWeight: 'bold', mb: 3 }}>
+              Your boards:
+            </Typography>
 
             {/* Trường hợp gọi API nhưng không tồn tại cái board nào trong Database trả về */}
-            {boards?.length === 0 &&
-              <Typography variant="span" sx={{ fontWeight: 'bold', mb: 3 }}>No result found!</Typography>
-            }
+            {boards?.length === 0 && (
+              <Typography variant='span' sx={{ fontWeight: 'bold', mb: 3 }}>
+                No result found!
+              </Typography>
+            )}
 
             {/* Trường hợp gọi API và có boards trong Database trả về thì render danh sách boards */}
-            {boards?.length > 0 &&
+            {boards?.length > 0 && (
               <Grid2 container spacing={2}>
-                {boards.map(b =>
+                {boards.map((b) => (
                   <Grid2 xs={2} sm={3} md={4} key={b}>
                     <Card sx={{ width: '250px' }}>
                       {/* Ý tưởng mở rộng về sau làm ảnh Cover cho board nhé */}
                       {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
-                      <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
+                      <Box
+                        sx={{ height: '50px', backgroundColor: randomColor() }}
+                      ></Box>
 
                       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-                        <Typography gutterBottom variant="h6" component="div">
-                          Board title
+                        <Typography gutterBottom variant='h6' component='div'>
+                          {b?.title || 'No title'}
                         </Typography>
                         <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-                          This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.
+                          variant='body2'
+                          color='text.secondary'
+                          sx={{
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                     {b?.description || 'No description'}
                         </Typography>
                         <Box
                           component={Link}
-                          to={'/boards/6534e1b8a235025a66b644a5'}
+                          to={`/boards/${b._id}`}
                           sx={{
                             mt: 1,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'flex-end',
                             color: 'primary.main',
-                            '&:hover': { color: 'primary.light' }
-                          }}>
-                          Go to board <ArrowRightIcon fontSize="small" />
+                            '&:hover': { color: 'primary.light' },
+                          }}
+                        >
+                          Go to board <ArrowRightIcon fontSize='small' />
                         </Box>
                       </CardContent>
                     </Card>
                   </Grid2>
-                )}
+                ))}
               </Grid2>
-            }
+            )}
 
             {/* Trường hợp gọi API và có totalBoards trong Database trả về thì render khu vực phân trang  */}
-            {(totalBoards > 0) &&
-              <Box sx={{ my: 3, pr: 5, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+            {totalBoards > 0 && (
+              <Box
+                sx={{
+                  my: 3,
+                  pr: 5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                }}
+              >
                 <Pagination
-                  size="large"
-                  color="secondary"
+                  size='large'
+                  color='#1A2027'
                   showFirstButton
                   showLastButton
                   // Giá trị prop count của component Pagination là để hiển thị tổng số lượng page, công thức là lấy Tổng số lượng bản ghi chia cho số lượng bản ghi muốn hiển thị trên 1 page (ví dụ thường để 12, 24, 26, 48...vv). sau cùng là làm tròn số lên bằng hàm Math.ceil
-                  count={Math.ceil(totalBoards / 12)}
+                  count={Math.ceil(totalBoards / DEFAULT_ITEMS_PER_PAGE)}
                   // Giá trị của page hiện tại đang đứng
                   page={page}
                   // Render các page item và đồng thời cũng là những cái link để chúng ta click chuyển trang
                   renderItem={(item) => (
                     <PaginationItem
                       component={Link}
-                      to={`/boards${item.page === 1 ? '' : `?page=${item.page}`}`}
+                      to={`/boards${
+                        item.page === DEFAULT_PAGE ? '' : `?page=${item.page}`
+                      }`}
                       {...item}
                     />
                   )}
                 />
               </Box>
-            }
+            )}
           </Grid2>
         </Grid2>
       </Box>
     </Container>
-  )
+  );
 }
 
 export default Boards
