@@ -62,6 +62,10 @@ function Boards() {
    */
   const page = parseInt(query.get('page') || '1', 10)
 
+  const updateStateBoards = (res) => {
+    setBoards(res.boards || []);
+    setTotalBoards(res.totalBoards || 0);
+  };
   useEffect(() => {
     // setBoards([...Array(16)].map((_, i) => i))
     // // Fake tạm giả sử trong Database trả về có tổng 100 bản ghi boards
@@ -71,11 +75,12 @@ function Boards() {
 
     console.log('Fetching boards with query:', location.search)
     fetchBoardsAPI(location.search)
-      .then((res) => {
-        setBoards(res.boards || [])
-        setTotalBoards(res.totalBoards || 0)
-      })
+      .then(updateStateBoards)
   }, [location.search])
+
+  const afterCreateNewBoard = () => {
+    fetchBoardsAPI(location.search).then(updateStateBoards);
+  }
 
   // Lúc chưa tồn tại boards > đang chờ gọi api thì hiện loading
   if (!boards) {
@@ -104,7 +109,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction='column' spacing={1}>
-              <SidebarCreateBoardModal />
+              <SidebarCreateBoardModal afterCreateNewBoard= {afterCreateNewBoard} />
             </Stack>
           </Grid2>
 
