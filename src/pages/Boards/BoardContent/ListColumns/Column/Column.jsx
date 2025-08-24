@@ -180,6 +180,7 @@ function Column({ column }) {
             {column?.title || 'Column Title'}
           </Typography> */}
           <ToggleFocusInput
+            id={column._id}
             value={column?.title}
             onChangedValue={updateTitleColumn}
             data-no-dnd='true'

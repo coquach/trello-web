@@ -1,13 +1,11 @@
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import { Box, Button, Chip, Tooltip } from "@mui/material";
-import VpnLockIcon from "@mui/icons-material/VpnLock";
 import AddToDriveIcon from "@mui/icons-material/AddToDrive";
 import BoltIcon from "@mui/icons-material/Bolt";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import Avatar from "@mui/material/Avatar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import VpnLockIcon from "@mui/icons-material/VpnLock";
+import { Box, Button, Chip, Tooltip } from "@mui/material";
 import { capitalizeFirstLetter } from "~/utils/formatter";
-import AvatarGroup from "@mui/material/AvatarGroup";
 import BoardUserGroup from "./BoardUserGroup";
 function BoardBar({ board }) {
   const MENUSTYLE = {
@@ -90,7 +88,7 @@ function BoardBar({ board }) {
         >
           Invite
         </Button>
-        <BoardUserGroup/>
+        <BoardUserGroup boardUsers={board?.FE_allUsers} />
       </Box>
     </Box>
   );

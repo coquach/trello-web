@@ -37,6 +37,19 @@ export const activeBoardSlice = createSlice({
 
       //Update dữ liệu của currentActiveBoard
       state.currentActiveBoard = board
+    },
+    updateCardInBoard: (state, action) => {
+      // https://redux-toolkit.js.org/usage/immer-reducers#updating-nested-data
+
+      const updatedCard = action.payload;
+      const column = state.currentActiveBoard.columns.find(column => column._id === updatedCard.columnId);
+      if (column) {
+        const card = column.cards.find(card => card._id === updatedCard._id);
+        if (card) {
+          // Update card fields
+          Object.assign(card, updatedCard);
+        }
+      }
     }
   },
 
@@ -45,6 +58,8 @@ export const activeBoardSlice = createSlice({
     builder.addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
       // eslint-disable-next-line prefer-const
       let board = action.payload
+
+      board.FE_allUsers = board.owners.concat(board.members);
 
       board.columns = mapOrder(board.columns, board.columnOrderIds, '_id');
 
@@ -67,7 +82,7 @@ export const activeBoardSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateCurrentActiveBoard } = activeBoardSlice.actions
+export const { updateCurrentActiveBoard, updateCardInBoard } = activeBoardSlice.actions
 
 //selectors
 export const selectCurrentActiveBoard = (state) => state.activeBoard.currentActiveBoard
