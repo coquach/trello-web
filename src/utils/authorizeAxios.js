@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { interceptorLoadingElements } from "./formatter";
 import { logoutUserAPI } from "~/redux/user/userSlice";
 import { refreshTokenAPI } from "~/apis";
+import { useNavigate } from "react-router-dom";
 
 
 let axiosInjectStore
@@ -28,6 +29,7 @@ authorizedAxiosInstance.interceptors.request.use(function (config) {
 );
 
 let refreshTokenPromise = null
+
 
 // Add a response interceptor
 authorizedAxiosInstance.interceptors.response.use(function onFulfilled(response) {

@@ -60,6 +60,9 @@ export const activeBoardSlice = createSlice({
 
       state.currentActiveBoard = board
     })
+    builder.addCase(fetchBoardDetailsAPI.rejected, (state) => {
+      state.currentActiveBoard = null
+    })
   }
 })
 

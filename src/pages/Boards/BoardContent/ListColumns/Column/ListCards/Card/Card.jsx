@@ -1,13 +1,16 @@
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Attachment, Comment, Group } from "@mui/icons-material";
 import { Button, Card as MuiCard, Typography } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import theme from "~/theme";
+import { useDispatch } from "react-redux";
+import { updateCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
 
 function Card({ card }) {
+  const dispatch = useDispatch();
+
   const shouldShowCardActions =
     !!card?.memberIds?.length ||
     !!card?.comments?.length ||
@@ -25,8 +28,14 @@ function Card({ card }) {
     opacity: isDragging ? 0.5 : undefined,
     border: isDragging ? "1px solid #ccc" : undefined,
   };
+
+  const setActiveCard = () => {
+    dispatch(updateCurrentActiveCard(card));
+  }
+
   return (
     <MuiCard
+      onClick={setActiveCard}
       ref={setNodeRef}
       style={dndKitCardStyles}
       {...attributes}

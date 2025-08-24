@@ -8,6 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { capitalizeFirstLetter } from "~/utils/formatter";
 import AvatarGroup from "@mui/material/AvatarGroup";
+import BoardUserGroup from "./BoardUserGroup";
 function BoardBar({ board }) {
   const MENUSTYLE = {
     backgroundColor: "transparent",
@@ -89,66 +90,7 @@ function BoardBar({ board }) {
         >
           Invite
         </Button>
-        <AvatarGroup
-          max={4}
-          sx={{
-            gap: "10px",
-            "& .MuiAvatar-root": {
-              width: 34,
-              height: 34,
-              fontSize: "16px",
-              border: "none",
-              cursor: "pointer",
-              color: "white",
-              "&:first-of-type": {
-                backgroundColor: "#a4b0de",
-              },
-            },
-          }}
-        >
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="VinhCo">
-            <Avatar
-              alt="VinhCo"
-              src="https://images2.thanhnien.vn/528068263637045248/2023/10/30/messi-1-16986835956171266032258.jpeg"
-            />
-          </Tooltip>
-        </AvatarGroup>
+        <BoardUserGroup/>
       </Box>
     </Box>
   );

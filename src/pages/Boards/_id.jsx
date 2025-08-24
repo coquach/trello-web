@@ -17,8 +17,11 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice';
 import BoardBar from './BoardBar/index';
 import BoardContent from './BoardContent/index';
+import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard';
+import { selectCurrentActiveCard } from '~/redux/activeCard/activeCardSlice';
 function Board() {
   const dispatch = useDispatch();
+  const activeCard = useSelector(selectCurrentActiveCard)
   const board = useSelector(selectCurrentActiveBoard);
   const { boardId } = useParams();
 
@@ -98,6 +101,7 @@ function Board() {
 
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      {activeCard && <ActiveCard />}
       <AppBar />
       <BoardBar board={board} />
       <BoardContent
