@@ -54,7 +54,7 @@ function CardActivitySection({ comments = [] , onAddComment}) {
       </Box>
 
       {/* Hiển thị danh sách các comments */}
-      {comments.length === 0 && (
+      {(!comments ||comments.length === 0) && (
         <Typography
           sx={{
             pl: '45px',
@@ -66,7 +66,7 @@ function CardActivitySection({ comments = [] , onAddComment}) {
           No activity found!
         </Typography>
       )}
-      {comments.map((comment, index) => (
+      {comments?.map((comment, index) => (
         <Box
           sx={{ display: 'flex', gap: 1, width: '100%', mb: 1.5 }}
           key={index}

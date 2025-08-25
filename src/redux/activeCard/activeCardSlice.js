@@ -1,9 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import authorizedAxiosInstance from '~/utils/authorizeAxios';
-import { isEmpty } from 'lodash';
-import { API_ROOT } from '~/utils/constants';
-import { generatePlaceholderCard } from '~/utils/formatter';
-import { mapOrder } from '~/utils/sort';
+import { createSlice } from '@reduxjs/toolkit';
 
 //* Khởi tạo giá trị State của một cái Slice trong Redux
 const initialState = {
@@ -41,10 +36,9 @@ export const activeCardSlice = createSlice({
     }
   },
 
-  //* Nơi xử lí dữ liệu bất đồng bộ
-  extraReducers: (builder) => {
-    
-  }
+  // //* Nơi xử lí dữ liệu bất đồng bộ
+  // extraReducers: (builder) => {
+  // }
 })
 
 // Action creators are generated for each case reducer function
