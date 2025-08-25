@@ -18,10 +18,10 @@ import {
 import BoardBar from './BoardBar/index';
 import BoardContent from './BoardContent/index';
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard';
-import { selectCurrentActiveCard } from '~/redux/activeCard/activeCardSlice';
+import { selectIsShowModalActiveCard } from '~/redux/activeCard/activeCardSlice';
 function Board() {
   const dispatch = useDispatch();
-  const activeCard = useSelector(selectCurrentActiveCard)
+  const activeCard = useSelector(selectIsShowModalActiveCard)
   const board = useSelector(selectCurrentActiveBoard);
   const { boardId } = useParams();
 

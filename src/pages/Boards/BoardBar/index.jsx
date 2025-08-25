@@ -1,45 +1,46 @@
-import AddToDriveIcon from "@mui/icons-material/AddToDrive";
-import BoltIcon from "@mui/icons-material/Bolt";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import VpnLockIcon from "@mui/icons-material/VpnLock";
-import { Box, Button, Chip, Tooltip } from "@mui/material";
-import { capitalizeFirstLetter } from "~/utils/formatter";
-import BoardUserGroup from "./BoardUserGroup";
+import AddToDriveIcon from '@mui/icons-material/AddToDrive';
+import BoltIcon from '@mui/icons-material/Bolt';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import VpnLockIcon from '@mui/icons-material/VpnLock';
+import { Box, Button, Chip, Tooltip } from '@mui/material';
+import { capitalizeFirstLetter } from '~/utils/formatter';
+import BoardUserGroup from './BoardUserGroup';
+import InviteBoardUser from './InviteBoardUser';
 function BoardBar({ board }) {
   const MENUSTYLE = {
-    backgroundColor: "transparent",
-    border: "none",
-    color: "white",
-    paddingX: "5px",
-    borderRadius: "4px",
-    "&:hover": {
-      backgroundColor: "primary.50",
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: 'white',
+    paddingX: '5px',
+    borderRadius: '4px',
+    '&:hover': {
+      backgroundColor: 'primary.50',
     },
-    ".MuiSvgIcon-root": {
-      color: "white",
+    '.MuiSvgIcon-root': {
+      color: 'white',
     },
   };
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
         height: (theme) => theme.trello.boardBarHeight,
-        display: "flex",
-        alignItems: "center",
+        display: 'flex',
+        alignItems: 'center',
         gap: 2,
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#34495e" : "#1976d2",
-        borderBottom: "1px solid white",
-        justifyContent: "space-between",
+          theme.palette.mode === 'dark' ? '#34495e' : '#1976d2',
+        borderBottom: '1px solid white',
+        justifyContent: 'space-between',
         paddingX: 2,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Tooltip title={board?.description || "Board Title"}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Tooltip title={board?.description || 'Board Title'}>
           <Chip
-            label={board?.title || "Board Title"}
+            label={board?.title || 'Board Title'}
             icon={<DashboardIcon />}
             clickable
             sx={MENUSTYLE}
@@ -54,40 +55,28 @@ function BoardBar({ board }) {
         />
 
         <Chip
-          label="App to Google Drive"
+          label='App to Google Drive'
           icon={<AddToDriveIcon />}
           clickable
           sx={MENUSTYLE}
         />
 
         <Chip
-          label="Automation "
+          label='Automation '
           icon={<BoltIcon />}
           clickable
           sx={MENUSTYLE}
         />
         <Chip
-          label="Filter"
+          label='Filter'
           icon={<FilterListIcon />}
           clickable
           sx={MENUSTYLE}
         />
       </Box>
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<PersonAddIcon />}
-          sx={{
-            color: "white",
-            borderColor: "white",
-            "&:hover": {
-              border: "none",
-            },
-          }}
-        >
-          Invite
-        </Button>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <InviteBoardUser boardId={board._id} />
         <BoardUserGroup boardUsers={board?.FE_allUsers} />
       </Box>
     </Box>

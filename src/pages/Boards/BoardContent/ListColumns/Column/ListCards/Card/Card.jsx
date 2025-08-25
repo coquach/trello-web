@@ -6,7 +6,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { useDispatch } from "react-redux";
-import { updateCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
+import { showModalActiveCard, updateCurrentActiveCard } from "~/redux/activeCard/activeCardSlice";
 
 function Card({ card }) {
   const dispatch = useDispatch();
@@ -31,6 +31,8 @@ function Card({ card }) {
 
   const setActiveCard = () => {
     dispatch(updateCurrentActiveCard(card));
+
+    dispatch(showModalActiveCard())
   }
 
   return (

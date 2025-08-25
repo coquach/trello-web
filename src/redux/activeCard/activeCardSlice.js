@@ -8,6 +8,7 @@ import { mapOrder } from '~/utils/sort';
 //* Khởi tạo giá trị State của một cái Slice trong Redux
 const initialState = {
   currentActiveCard: null,
+  isShowModalActiveCard: false,
 }
 
 
@@ -17,8 +18,12 @@ export const activeCardSlice = createSlice({
   initialState,
   //reducers:  nơi xử lí dữ liệu đồng bộ
   reducers: {
-    clearCurrentActiveCard: (state) => {
+    showModalActiveCard: (state) => {
+      state.isShowModalActiveCard = true
+    },
+    clearAndHideCurrentActiveCard: (state) => {
       state.currentActiveCard = null
+      state.isShowModalActiveCard = false
     },
     updateCurrentActiveCard: (state, action) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -43,9 +48,11 @@ export const activeCardSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { clearCurrentActiveCard, updateCurrentActiveCard } = activeCardSlice.actions
+export const { showModalActiveCard, clearAndHideCurrentActiveCard, updateCurrentActiveCard } = activeCardSlice.actions
 
 //selectors
 export const selectCurrentActiveCard = (state) => state.activeCard.currentActiveCard
+
+export const selectIsShowModalActiveCard = (state) => state.activeCard.isShowModalActiveCard
 
 export const activeCardReducer = activeCardSlice.reducer
