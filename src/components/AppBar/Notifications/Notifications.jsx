@@ -15,10 +15,14 @@ import DoneIcon from '@mui/icons-material/Done';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  addNotification,
   fetchInvitationsAPI,
   selectCurrentNotifications,
   updateBoardInvitationAPI,
 } from '~/redux/notification/notificationSlice';
+import { socketIoInstance } from '~/main';
+import { selectCurrentUser } from '~/redux/user/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const BOARD_INVITATION_STATUS = {
   PENDING: 'PENDING',
@@ -31,20 +35,45 @@ function Notifications() {
   const open = Boolean(anchorEl);
   const handleClickNotificationIcon = (event) => {
     setAnchorEl(event.currentTarget);
+
+    setNewNotification(false)
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const [newNotification, setNewNotification] = useState(false);
+
   const dispatch = useDispatch();
+  const currentUser = useSelector(selectCurrentUser);
   const notifications = useSelector(selectCurrentNotifications);
 
+  const navigate = useNavigate()
   useEffect(() => {
     dispatch(fetchInvitationsAPI());
-  }, [dispatch]);
+
+    const onReceiveInvitation = (invitation) => {
+      if (invitation.inviteeId === currentUser._id) {
+
+        dispatch(addNotification(invitation))
+
+        setNewNotification(true)
+      }
+    };
+
+    socketIoInstance.on('BE_USER_INVITED_TO_BOARD', onReceiveInvitation);
+
+    return () => {
+      socketIoInstance.off('BE_USER_INVITED_TO_BOARD', onReceiveInvitation);
+    };
+  }, [dispatch, currentUser._id]);
 
   const updateBoardInvitation = (status, invitationId) => {
-    dispatch(updateBoardInvitationAPI({status, invitationId}))
+    dispatch(updateBoardInvitationAPI({ status, invitationId })).then(res => {
+      if( res.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
+        navigate(`/boards/${res.payload.boardInvitation.boardId}`)
+      }
+    });
   };
 
   return (
@@ -53,7 +82,7 @@ function Notifications() {
         <Badge
           color='warning'
           // variant="none"
-          variant='dot'
+          variant={newNotification ? 'dot' : 'none'}
           sx={{ cursor: 'pointer' }}
           id='basic-button-open-notification'
           aria-controls={open ? 'basic-notification-drop-down' : undefined}
@@ -63,7 +92,7 @@ function Notifications() {
         >
           <NotificationsNoneIcon
             sx={{
-              color: 'white',
+              color: newNotification ? 'yellow' : 'white',
               // color: 'yellow'
             }}
           />
@@ -133,7 +162,10 @@ function Notifications() {
                       color='success'
                       size='small'
                       onClick={() =>
-                        updateBoardInvitation(BOARD_INVITATION_STATUS.ACCEPTED, notification._id)
+                        updateBoardInvitation(
+                          BOARD_INVITATION_STATUS.ACCEPTED,
+                          notification._id
+                        )
                       }
                     >
                       Accept
@@ -145,7 +177,10 @@ function Notifications() {
                       color='error'
                       size='small'
                       onClick={() =>
-                        updateBoardInvitation(BOARD_INVITATION_STATUS.REJECTED, notification._id)
+                        updateBoardInvitation(
+                          BOARD_INVITATION_STATUS.REJECTED,
+                          notification._id
+                        )
                       }
                     >
                       Reject

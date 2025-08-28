@@ -16,20 +16,24 @@ import { persistStore } from 'redux-persist';
 import { injectStore } from './utils/authorizeAxios';
 import { GlobalStyles } from '@mui/material';
 
+import { io } from 'socket.io-client';
+import { API_ROOT } from './utils/constants';
+export const socketIoInstance = io(API_ROOT)
+
 const persistor = persistStore(store);
 
 injectStore(store);
 
 createRoot(document.getElementById('root')).render(
-  <BrowserRouter
-    basename='/'
-    future={{
-      v7_startTransition: true,
-      v7_relativeSplatPath: true,
-    }}
-  >
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <BrowserRouter
+        basename='/'
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <ThemeProvider defaultMode='system' theme={theme}>
           <ConfirmProvider
             useLegacyReturn
@@ -49,7 +53,7 @@ createRoot(document.getElementById('root')).render(
             <ToastContainer position='bottom-left' theme='colored' />
           </ConfirmProvider>
         </ThemeProvider>
-      </PersistGate>
-    </Provider>
-  </BrowserRouter>
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
 );
