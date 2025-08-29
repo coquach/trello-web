@@ -61,10 +61,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
-          borderWidth: "0.5px",
-          "&:hover": {
-            borderWidth: "1px",
-          },
+          border: 'none',
+          boxShadow: 'none',
+          borderRadius: "8px",
+
         },
       },
     },
@@ -87,7 +87,7 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: ({ theme }) => ({
-          color: theme.palette.primary.main,
+          color: theme.palette.primary,
           fontSize: "0.875rem",
         }),
       },

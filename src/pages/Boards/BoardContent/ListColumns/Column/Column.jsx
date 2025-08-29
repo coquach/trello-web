@@ -17,8 +17,20 @@ import { useConfirm } from 'material-ui-confirm';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import ListCards from './ListCards/ListCards';
+import {
+  createNewCardAPI,
+  deleteColumnDetailsAPI,
+  updateColumnDetailsAPI,
+} from '~/apis';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectCurrentActiveBoard,
+  updateCurrentActiveBoard,
+} from '~/redux/activeBoard/activeBoardSlice';
+import { cloneDeep } from 'lodash';
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput';
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+function Column({ column }) {
   const {
     attributes,
     listeners,
@@ -55,6 +67,10 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   };
   const [newCardTitle, setNewCardTitle] = useState('');
 
+  const dispatch = useDispatch();
+
+  const board = useSelector(selectCurrentActiveBoard);
+
   const addNewCard = async () => {
     if (newCardTitle.trim() === '') {
       toast.error("Card title mustn't be empty");
@@ -65,7 +81,26 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       title: newCardTitle,
       columnId: column._id,
     };
-    await createNewCard(cardData);
+    const createdCard = await createNewCardAPI({
+      ...cardData,
+      boardId: board._id,
+    });
+
+    const newBoard = cloneDeep(board);
+    const columnToUpdate = newBoard.columns.find(
+      (column) => column._id === createdCard.columnId
+    );
+    if (columnToUpdate) {
+      if (columnToUpdate.cards.some((card) => card.FE_PlaceholderCard)) {
+        columnToUpdate.cards = [createdCard];
+        columnToUpdate.cardOrderIds = [createdCard._id];
+      } else {
+        columnToUpdate.cards.push(createdCard);
+        columnToUpdate.cardOrderIds.push(createdCard._id);
+      }
+    }
+
+    dispatch(updateCurrentActiveBoard(newBoard));
     // Logic to add new card
     console.log('New card added:', newCardTitle);
     setNewCardTitle('');
@@ -83,9 +118,29 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       confirmationButtonProps: { color: 'error' },
     })
       .then(() => {
-        deleteColumnDetails(column._id);
+        const newBoard = { ...board };
+        newBoard.columns = newBoard.columns.filter((c) => c._id !== column._id);
+        newBoard.columnsOrderIds = newBoard.columnOrderIds.filter(
+          (_id) => _id !== column._id
+        );
+        dispatch(updateCurrentActiveBoard(newBoard));
+
+        deleteColumnDetailsAPI(column._id).then((res) => {
+          toast.success(res?.result);
+        });
       })
       .catch(() => {});
+  };
+
+  const updateTitleColumn = (newTitle) => {
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then((res) => {
+      const newBoard = cloneDeep(board);
+      const columnToUpdate = newBoard.columns.find((c) => c._id === column._id);
+      if (columnToUpdate) {
+        columnToUpdate.title = newTitle;
+      }
+      dispatch(updateCurrentActiveBoard(newBoard));
+    });
   };
 
   return (
@@ -114,7 +169,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
             padding: 2,
           }}
         >
-          <Typography
+          {/* <Typography
             sx={{
               fontSize: '1rem',
               fontWeight: 'bold',
@@ -123,7 +178,13 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
             variant='h6'
           >
             {column?.title || 'Column Title'}
-          </Typography>
+          </Typography> */}
+          <ToggleFocusInput
+            id={column._id}
+            value={column?.title}
+            onChangedValue={updateTitleColumn}
+            data-no-dnd='true'
+          />
           <Box>
             <Tooltip title='More options'>
               <ExpandMoreIcon
@@ -303,6 +364,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
                 }}
               >
                 <Button
+                  className='interceptor-loading'
                   variant='contained'
                   color='success'
                   onClick={addNewCard}

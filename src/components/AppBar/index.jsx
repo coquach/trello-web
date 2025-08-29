@@ -1,73 +1,82 @@
-import { useState } from "react";
-import AppsIcon from "@mui/icons-material/Apps";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import Badge from "@mui/material/Badge";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import SvgIcon from "@mui/material/SvgIcon";
-import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import TrelloIcon from "~/assets/trello.svg?react";
-import ModeSelect from "../ModeSelect/index";
-import Recent from "./Menus/Recent";
-import Starred from "./Menus/Starred";
-import Templates from "./Menus/Templates";
-import WorkSpaces from "./Menus/Workspaces";
-import Profiles from "./Menus/Profiles";
-import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
-import CloseIcon from "@mui/icons-material/Close";
+import { useState } from 'react';
+import AppsIcon from '@mui/icons-material/Apps';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import SvgIcon from '@mui/material/SvgIcon';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import TrelloIcon from '~/assets/trello.svg?react';
+import ModeSelect from '../ModeSelect/index';
+import Recent from './Menus/Recent';
+import Starred from './Menus/Starred';
+import Templates from './Menus/Templates';
+import WorkSpaces from './Menus/Workspaces';
+import Profiles from './Menus/Profiles';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
+import CloseIcon from '@mui/icons-material/Close';
+import { Link } from 'react-router-dom';
+import Notifications from './Notifications/Notifications';
 function AppBar() {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
 
   return (
     <Box
       px={2}
       sx={{
-        width: "100%",
+        width: '100%',
         height: (theme) => theme.trello.appBarHeight,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#2c3e50" : "#1565c0",
+          theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0',
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <AppsIcon sx={{ color: "white" }} />
-        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <SvgIcon
-            component={TrelloIcon}
-            inheritViewBox
-            fontSize="small"
-            sx={{ color: "white" }}
-          />
-          <Typography
-            variant="span"
-            sx={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            Trello
-          </Typography>
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Link to='/boards'>
+          <Tooltip title='Boards List'>
+            <AppsIcon sx={{ color: 'white', verticalAlign: 'middle' }} />
+          </Tooltip>
+        </Link>
+        <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <SvgIcon
+              component={TrelloIcon}
+              inheritViewBox
+              fontSize='small'
+              sx={{ color: 'white' }}
+            />
+            <Typography
+              variant='span'
+              sx={{
+                fontSize: '1.2rem',
+                fontWeight: 'bold',
+                color: 'white',
+              }}
+            >
+              Trello
+            </Typography>
+          </Box>
+        </Link>
+
         <WorkSpaces />
         <Recent />
         <Starred />
         <Templates />
         <Button
-          variant="outlined"
+          variant='outlined'
           startIcon={<LibraryAddIcon />}
           sx={{
-            color: "white",
-            border: "none",
-            "&:hover": {
-              border: "none",
+            color: 'white',
+            border: 'none',
+            '&:hover': {
+              border: 'none',
             },
           }}
         >
@@ -75,65 +84,61 @@ function AppBar() {
         </Button>
       </Box>
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <TextField
-          id="outlined-search"
-          label="Search..."
-          type="text"
-          size="small"
+          id='outlined-search'
+          label='Search...'
+          type='text'
+          size='small'
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           slotProps={{
             input: {
               startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: "white" }} />
+                <InputAdornment position='start'>
+                  <SearchIcon sx={{ color: 'white' }} />
                 </InputAdornment>
               ),
               endAdornment: (
-                <InputAdornment position="end">
+                <InputAdornment position='end'>
                   <CloseIcon
-                    visibility={searchValue.length > 0 ? "visible" : "hidden"}
-                    fontSize="small"
-                    sx={{ color: "white", cursor: "pointer" }}
-                    onClick={() => setSearchValue("")}
+                    visibility={searchValue.length > 0 ? 'visible' : 'hidden'}
+                    fontSize='small'
+                    sx={{ color: 'white', cursor: 'pointer' }}
+                    onClick={() => setSearchValue('')}
                   />
                 </InputAdornment>
               ),
             },
           }}
           sx={{
-            "& label": {
-              color: "white",
+            '& label': {
+              color: 'white',
             },
-            "& label.Mui-focused": {
-              color: "white",
+            '& label.Mui-focused': {
+              color: 'white',
             },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "white",
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: 'white',
               },
-              "&:hover fieldset": {
-                borderColor: "white",
+              '&:hover fieldset': {
+                borderColor: 'white',
               },
-              "&.Mui-focused fieldset": {
-                borderColor: "white",
+              '&.Mui-focused fieldset': {
+                borderColor: 'white',
               },
             },
-            "& input": {
-              color: "white",
-            }
+            '& input': {
+              color: 'white',
+            },
           }}
         />
 
         <ModeSelect />
-        <Tooltip title="Notifications">
-          <Badge color="warning" variant="dot" sx={{ cursor: "pointer" }}>
-            <NotificationsNoneIcon sx={{ color: "white" }} />
-          </Badge>
-        </Tooltip>
-        <Tooltip title="Help">
-          <HelpOutlineIcon sx={{ cursor: "pointer", color: "white" }} />
+        <Notifications />
+        <Tooltip title='Help'>
+          <HelpOutlineIcon sx={{ cursor: 'pointer', color: 'white' }} />
         </Tooltip>
         <Profiles />
       </Box>

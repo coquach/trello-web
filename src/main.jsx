@@ -6,23 +6,52 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ConfirmProvider } from 'material-ui-confirm';
 import theme from '~/theme';
 import App from '~/App';
+import { store } from '~/redux/store';
+import { Provider } from 'react-redux';
+
+import { BrowserRouter } from 'react-router-dom';
+
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+import { injectStore } from './utils/authorizeAxios';
+import { GlobalStyles } from '@mui/material';
+
+
+
+const persistor = persistStore(store);
+
+injectStore(store);
+
 createRoot(document.getElementById('root')).render(
-  <ThemeProvider defaultMode='system' theme={theme}>
-    <ConfirmProvider
-      defaultOptions={{
-        dialogProps: { maxWidth: 'xs' },
-        confirmationButtonProps: { variant: 'contained' },
-        cancellationButtonProps: { color: 'inherit' },
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <BrowserRouter
+        basename='/'
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <ThemeProvider defaultMode='system' theme={theme}>
+          <ConfirmProvider
+            useLegacyReturn
+            defaultOptions={{
+              dialogProps: { maxWidth: 'xs' },
+              confirmationButtonProps: { variant: 'contained' },
+              cancellationButtonProps: { color: 'inherit' },
+              cancellationText: 'Cancel',
+              allowClose: true,
 
-        //* Only close in 2 buttons
-        allowClose: false,
-
-        buttonOrder: ['confirm', 'cancel'],
-      }}
-    >
-      <CssBaseline />
-      <App />
-      <ToastContainer position='bottom-left' theme='colored' />
-    </ConfirmProvider>
-  </ThemeProvider>
+              buttonOrder: ['confirm', 'cancel'],
+            }}
+          >
+            <GlobalStyles styles={{ a: { textDecoration: 'none' } }} />
+            <CssBaseline />
+            <App />
+            <ToastContainer position='bottom-left' theme='colored' />
+          </ConfirmProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
 );

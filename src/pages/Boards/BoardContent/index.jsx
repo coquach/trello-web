@@ -21,12 +21,10 @@ import ListColumns from "./ListColumns/ListColumns";
 
 function BoardContent({
   board,
-  createNewColumn,
-  createNewCard,
   moveColumns,
   moveCardInTheSameColumn,
   moveCardToDifferentColumn,
-  deleteColumnDetails
+
 }) {
   const ACTIVE_DRAG_ITEM_TYPE = {
     COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -360,9 +358,6 @@ function BoardContent({
       >
         <ListColumns
           columns={orderedColumns}
-          createNewColumn={createNewColumn}
-          createNewCard={createNewCard}
-          deleteColumnDetails={deleteColumnDetails}
         />
         <DragOverlay dropAnimation={dropAnimation}>
           {activeDragItem.type === ACTIVE_DRAG_ITEM_TYPE.COLUMN ? (
