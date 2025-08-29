@@ -4,7 +4,7 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '~/redux/user/userSlice';
-import bg from 'src/assets/auth/login-register-bg.jpg';
+import bg from '~/assets/auth/login-register-bg.jpg';
 
 <Box
   sx={{
