@@ -22,6 +22,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
 import Notifications from './Notifications/Notifications';
+import AutoCompleteSearchBoard from './SearchBoards/AutoCompleteSearchBoard';
 function AppBar() {
   const [searchValue, setSearchValue] = useState('');
 
@@ -85,56 +86,7 @@ function AppBar() {
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <TextField
-          id='outlined-search'
-          label='Search...'
-          type='text'
-          size='small'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <SearchIcon sx={{ color: 'white' }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <CloseIcon
-                    visibility={searchValue.length > 0 ? 'visible' : 'hidden'}
-                    fontSize='small'
-                    sx={{ color: 'white', cursor: 'pointer' }}
-                    onClick={() => setSearchValue('')}
-                  />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            '& label': {
-              color: 'white',
-            },
-            '& label.Mui-focused': {
-              color: 'white',
-            },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'white',
-              },
-              '&:hover fieldset': {
-                borderColor: 'white',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'white',
-              },
-            },
-            '& input': {
-              color: 'white',
-            },
-          }}
-        />
-
+        <AutoCompleteSearchBoard />
         <ModeSelect />
         <Notifications />
         <Tooltip title='Help'>
