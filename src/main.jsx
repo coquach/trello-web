@@ -16,9 +16,7 @@ import { persistStore } from 'redux-persist';
 import { injectStore } from './utils/authorizeAxios';
 import { GlobalStyles } from '@mui/material';
 
-import { io } from 'socket.io-client';
-import { API_ROOT } from './utils/constants';
-export const socketIoInstance = io(API_ROOT)
+
 
 const persistor = persistStore(store);
 
